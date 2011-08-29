@@ -66,7 +66,7 @@ public class PracticeBoxingActivity extends Activity {
     protected void end() {
         final int finalScore = Integer.parseInt(mCounterView.getText().toString());
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Your score: " + finalScore).setCancelable(false)
+        builder.setMessage("Your score: " + finalScore).setCancelable(true)
                 .setPositiveButton("Retry", new DialogInterface.OnClickListener() {
                     public void onClick(final DialogInterface dialog, final int id) {
                         finish();

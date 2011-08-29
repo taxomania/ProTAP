@@ -5,57 +5,94 @@ package games.pack.protap;
 
 import java.util.Calendar;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.view.View;
 
 /**
  * @author Tariq
  *
  */
-public class PracticeReactionActivity extends ReactionActivity {
-    private static long start;
-
-    protected void changeBackground() {
-        super.changeBackground();
-        start = Calendar.getInstance().getTimeInMillis();
-    }
-
-    private long time;
+public class PracticeReactionActivity extends Activity {
+    private long mStart;
+    protected long mTime;
 
     @Override
-    public void complete(View view) {
-        long finish = Calendar.getInstance().getTimeInMillis();
-        time += (finish - start);
-        final Intent retryIntent = new Intent(this, PracticeReactionActivity.class);
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Your time: " + getTime() + "ms\nYour score: " + score(time))
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.reaction);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+    } // onCreate
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        final double countdownTime1 = 3000 * Math.random();
+        final long countdownTime = (countdownTime1 < 2000) ? 2000 : (long) countdownTime1;
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Press the button when it goes green. Press GO to start")
                 .setCancelable(false)
+                .setPositiveButton("GO", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, final int id) {
+                        new CountDownTimer(countdownTime, 100) {
+                            @Override
+                            public void onFinish() {
+                                changeBackground();
+                            }
+
+                            @Override
+                            public void onTick(final long millisUntilFinished) {
+                            }
+                        }.start();
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
+    } // onStart
+
+    protected void changeBackground() {
+        setContentView(R.layout.reaction_green);
+        mStart = Calendar.getInstance().getTimeInMillis();
+    }
+
+    public void complete(final View view) {
+        final long finish = Calendar.getInstance().getTimeInMillis();
+        mTime += (finish - mStart);
+        showCompleteAlert();
+    }
+
+    protected void showCompleteAlert(){
+        final Intent retryIntent = new Intent(this, PracticeReactionActivity.class);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Your time: " + mTime + "ms\nYour score: " + score(mTime))
+                .setCancelable(true)
                 .setPositiveButton("Retry", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
+                    public void onClick(final DialogInterface dialog, final int id) {
                         end(retryIntent);
                     }
                 }).setNegativeButton("Return to Practice", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
+                    public void onClick(final DialogInterface dialog, final int id) {
                         finish();
                     }
                 });
-        AlertDialog alert = builder.create();
-        alert.show();
+        builder.create().show();
     }
 
-    public void fail(View view) {
-        time += 2000;
+    protected void end(final Intent intent) {
+        finish();
+        startActivity(intent);
     }
 
-    private static int score(long time) {
-        if (time > 500) return 0;
-        return (int) (500 - time);
+    public void fail(final View view) {
+        mTime += 2000;
     }
 
-    public long getTime() {
-        return time;
+    protected int score(long time) {
+        return (time > 500) ? 0 : (int) (500 - time);
     }
-
 }

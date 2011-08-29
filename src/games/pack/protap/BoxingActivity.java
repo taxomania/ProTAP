@@ -16,7 +16,7 @@ public class BoxingActivity extends PracticeBoxingActivity {
     private static final String PREFERENCES_NAME = "ProTAP_Prefs";
     private static final String PREFERENCES_HIGHSCORE = "boxing_score";
     private static SharedPreferences.Editor prefsEditor;
-    static int highScore;
+    private static int highScore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
