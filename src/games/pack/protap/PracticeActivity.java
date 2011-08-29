@@ -15,12 +15,10 @@ public class PracticeActivity extends Activity {
     }
 
     public void onBoxingClick(View view) {
-        Intent boxingIntent = new Intent(this, PracticeBoxingActivity.class);
-        startActivity(boxingIntent);
+        startActivity(new Intent(this, PracticeBoxingActivity.class));
     }
 
     public void onReactionClick(View view) {
-        Intent reactionIntent = new Intent(this, PracticeReactionActivity.class);
-        startActivity(reactionIntent);
+        startActivity(new Intent(this, PracticeReactionActivity.class));
     }
 }
