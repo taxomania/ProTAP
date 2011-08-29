@@ -6,7 +6,6 @@ package games.pack.protap;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 /**
@@ -14,17 +13,13 @@ import android.os.Bundle;
  *
  */
 public class ReactionActivity extends PracticeReactionActivity {
-    private static final String PREFERENCES_NAME = "ProTAP_Prefs";
-    private static final String PREFERENCES_HIGHSCORE = "reaction_score";
-    private static SharedPreferences.Editor prefsEditor;
-    private static int highScore;
+    private static int sHighScore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SharedPreferences prefs = getSharedPreferences(PREFERENCES_NAME, MODE_PRIVATE);
-        prefsEditor = prefs.edit();
-        highScore = prefs.getInt(PREFERENCES_HIGHSCORE, 0);
+
+        new GetReaction().execute();
     }
 
     @Override
@@ -44,13 +39,24 @@ public class ReactionActivity extends PracticeReactionActivity {
                 });
         final AlertDialog alert = builder.create();
         alert.show();
-        if (score > highScore) {
-            highScore = score;
-            prefsEditor.putInt(PREFERENCES_HIGHSCORE, highScore);
-            prefsEditor.commit();
+        if (score > sHighScore) {
+            sHighScore = score;
+            new PostTopScore(this, PostTopScore.REACTION).execute(sHighScore);
             final PostHighScore newHighscore = new PostHighScore(ReactionActivity.this, "reaction",
                     score);
             newHighscore.enterName();
         }
+    } // showCompleteAlert
+
+    private final class GetReaction extends RetrieveTopScore {
+        public GetReaction() {
+            super(ReactionActivity.this, REACTION);
+        }
+
+        @Override
+        protected void onPostExecute(final Integer[] result) {
+            if (result[0] != null) sHighScore = result[0];
+        }
+
     }
-}
+} // ReactionActivity

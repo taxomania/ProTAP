@@ -5,7 +5,6 @@ package games.pack.protap;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 /**
@@ -13,17 +12,12 @@ import android.os.Bundle;
  *
  */
 public class BoxingActivity extends PracticeBoxingActivity {
-    private static final String PREFERENCES_NAME = "ProTAP_Prefs";
-    private static final String PREFERENCES_HIGHSCORE = "boxing_score";
-    private static SharedPreferences.Editor prefsEditor;
-    private static int highScore;
+    private static int sHighScore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SharedPreferences prefs = getSharedPreferences(PREFERENCES_NAME, MODE_PRIVATE);
-        prefsEditor = prefs.edit();
-        highScore = prefs.getInt(PREFERENCES_HIGHSCORE, 0);
+        new GetBoxing().execute();
     }
 
     @Override
@@ -38,14 +32,23 @@ public class BoxingActivity extends PracticeBoxingActivity {
                 });
         final AlertDialog alert = builder.create();
         alert.show();
-        if (finalScore > highScore) {
-            highScore = finalScore;
-            prefsEditor.putInt(PREFERENCES_HIGHSCORE, highScore);
-            prefsEditor.commit();
+        if (finalScore > sHighScore) {
+            sHighScore = finalScore;
+            new PostTopScore(this, PostTopScore.BOXING).execute(sHighScore);
             final PostHighScore newHighscore = new PostHighScore(BoxingActivity.this, "boxing",
                     finalScore);
             newHighscore.enterName();
         }
-    }
+    } // end
 
-}
+    private final class GetBoxing extends RetrieveTopScore {
+        public GetBoxing() {
+            super(BoxingActivity.this, BOXING);
+        }
+
+        @Override
+        protected void onPostExecute(final Integer[] result) {
+            if (result[0] != null) sHighScore = result[0];
+        }
+    } // GetBoxing
+} // BoxingActivity

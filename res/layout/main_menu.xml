@@ -2,6 +2,16 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="fill_parent" android:layout_width="fill_parent"
     android:background="@drawable/menu2" android:id="@+id/mainLayout">
+    <TableLayout android:stretchColumns="0,1"
+        android:layout_height="wrap_content" android:layout_width="fill_parent"
+        android:layout_alignParentTop="true">
+        <TableRow android:paddingTop="2dp">
+            <TextView android:gravity="center" android:id="@+id/topReaction"
+                android:textColor="@color/white" />
+            <TextView android:gravity="center" android:id="@+id/topBoxing"
+                android:textColor="@color/white" />
+        </TableRow>
+    </TableLayout>
     <Button android:layout_width="fill_parent" android:onClick="onNewGameClick"
         android:layout_height="wrap_content" android:text="New Game"
         android:id="@+id/new_game_button" android:layout_above="@+id/practice_button"></Button>
