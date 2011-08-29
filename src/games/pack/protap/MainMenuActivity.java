@@ -33,4 +33,5 @@ public class MainMenuActivity extends Activity {
         startActivity(new Intent(this, PracticeActivity.class));
     }
 
+    // TODO : Add options menu, show high scores? reset high scores
 }

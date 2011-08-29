@@ -42,7 +42,7 @@ public class BoxingActivity extends PracticeBoxingActivity {
             highScore = finalScore;
             prefsEditor.putInt(PREFERENCES_HIGHSCORE, highScore);
             prefsEditor.commit();
-            PostHighScore newHighscore = new PostHighScore(BoxingActivity.this, "boxing",
+            final PostHighScore newHighscore = new PostHighScore(BoxingActivity.this, "boxing",
                     finalScore);
             newHighscore.enterName();
         }

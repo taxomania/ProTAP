@@ -2,7 +2,6 @@ package games.pack.protap;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,106 +20,100 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
-import android.util.Log;
+import android.text.InputType;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
 public class PostHighScore {
-	private String username, entity;
-	private int score;
-	private Context con;
-	
-	public PostHighScore(Context c, String e, int s){
-		entity = e;
-		score = s;
-		con = c;
-	}
-	public void enterName()
-    {
-		AlertDialog.Builder builder = new AlertDialog.Builder(con);
-		builder.setTitle("NEW HIGHSCORE!");
-        final EditText userName = new EditText(con);
+    private static final String APP_ENGINE_URL = "http://pro-tap.appspot.com/leaderboard";
+    private String mEntity, mScore;
+    private Context mContext;
+
+    public PostHighScore(final Context c, final String e, final int s) {
+        mEntity = e;
+        mScore = Integer.toString(s);
+        mContext = c;
+    }
+
+    public void enterName() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setTitle("NEW HIGHSCORE!");
+        final EditText userName = new EditText(mContext);
+        userName.setInputType(InputType.TYPE_CLASS_TEXT);
         builder.setView(userName).setMessage("Enter Your Name")
-                .setPositiveButton("Done",
-                        new DialogInterface.OnClickListener()
-                {
-                    public void onClick(DialogInterface dialog, int whichButton)
-                    {
-                    	username = userName.getText().toString();
-                    	InputMethodManager imm = (InputMethodManager)con.getSystemService(Context.INPUT_METHOD_SERVICE);
+                .setPositiveButton("Done", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, final int whichButton) {
+                        final InputMethodManager imm = (InputMethodManager) mContext
+                                .getSystemService(Context.INPUT_METHOD_SERVICE);
                         imm.hideSoftInputFromWindow(userName.getWindowToken(), 0);
-                        postHighscore();                
+                        new HighScorePoster().execute(APP_ENGINE_URL, mEntity, userName.getText()
+                                .toString(), mScore);
                     }
-                }).setNegativeButton("Cancel",
-                        new DialogInterface.OnClickListener()
-                {
-                    public void onClick(DialogInterface dialog, int whichButton)
-                    {
-                    	
+                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, final int whichButton) {
+                        dialog.dismiss();
                     }
                 });
-        AlertDialog alert = builder.create();
+        final AlertDialog alert = builder.create();
         alert.show();
     }
-	
-	private void postHighscore() {
-		Log.i("USERNAME", "User name is" + username);
-		// start upload
-		new HighScorePoster().execute();
-	}
 
-	public class HighScorePoster extends AsyncTask<URL, Integer, Void> {
-		private HttpClient client;
-		private HttpPost post;
-		int highScoreToPost;
-		private HttpResponse response;
+    public class HighScorePoster extends AsyncTask<String, Void, HttpResponse> {
+        private final ProgressDialog dialog = new ProgressDialog(mContext);
 
-		private final ProgressDialog dialog = new ProgressDialog(con);
+        @Override
+        protected void onPreExecute() {
+            this.dialog.setMessage("Uploading new high score...");
+            this.dialog.show();
+        }
 
-		protected void onPreExecute() {
-			this.dialog.setMessage("Uploading new high score...");
-			this.dialog.show();
-		}
+        @Override
+        protected HttpResponse doInBackground(final String... params) {
+            if (params.length < 4) return null;
+            final HttpClient client = new DefaultHttpClient();
+            HttpPost post;
+            try {
+                post = new HttpPost(params[0]);
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
+                return null;
+            }
+            final List<NameValuePair> pairs = new ArrayList<NameValuePair>();
+            pairs.add(new BasicNameValuePair("type", params[1]));
+            pairs.add(new BasicNameValuePair("content", params[2]));
+            pairs.add(new BasicNameValuePair("score", params[3]));
+            try {
+                post.setEntity(new UrlEncodedFormEntity(pairs));
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            try {
+                return client.execute(post);
+            } catch (ClientProtocolException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
-		@Override
-		protected Void doInBackground(URL... params) {
-			client = new DefaultHttpClient();
-			post = new HttpPost("http://pro-tap.appspot.com/leaderboard");
-			List<NameValuePair> pairs = new ArrayList<NameValuePair>();
-			pairs.add(new BasicNameValuePair("type", entity));
-			pairs.add(new BasicNameValuePair("content", username));
-			pairs.add(new BasicNameValuePair("score", "" + score));
-			try {
-				post.setEntity(new UrlEncodedFormEntity(pairs));
-			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
-			}
-			try {
-				response = client.execute(post);
-			} catch (ClientProtocolException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+            return null;
+        }
 
-			return null;
-		}
+        @Override
+        protected void onPostExecute(final HttpResponse response) {
+            if (this.dialog.isShowing()) {
+                this.dialog.dismiss();
+            }
+            if (response == null) {
+                Toast.makeText(mContext, "Error posting", Toast.LENGTH_SHORT).show();
+            }
+            if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
+                Toast.makeText(mContext,
+                        "Error Whilst Posting: " + response.getStatusLine().getReasonPhrase(),
+                        Toast.LENGTH_LONG).show();
+            }
 
-		protected void onPostExecute(final Void unused) {
-			if (this.dialog.isShowing()) {
-				this.dialog.dismiss();
-			}
-			if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
-				Toast error = Toast.makeText(con,
-						"Error Whilst Posting: "
-								+ response.getStatusLine().getReasonPhrase(),
-						Toast.LENGTH_LONG);
-				error.show();
-			}
+        }
+    }
 
-		}
-	}
-
-	
 }

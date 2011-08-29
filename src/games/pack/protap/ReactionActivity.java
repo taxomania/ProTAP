@@ -32,8 +32,7 @@ public class ReactionActivity extends PracticeReactionActivity {
         final int score = score(mTime);
         final Intent boxingIntent = new Intent(this, BoxingActivity.class);
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Your time: " + mTime + "ms\nYour score: " + score)
-                .setCancelable(false)
+        builder.setMessage("Your time: " + mTime + "ms\nYour score: " + score).setCancelable(false)
                 .setPositiveButton("Continue to Boxing", new DialogInterface.OnClickListener() {
                     public void onClick(final DialogInterface dialog, final int id) {
                         end(boxingIntent);
@@ -49,7 +48,8 @@ public class ReactionActivity extends PracticeReactionActivity {
             highScore = score;
             prefsEditor.putInt(PREFERENCES_HIGHSCORE, highScore);
             prefsEditor.commit();
-            PostHighScore newHighscore = new PostHighScore(ReactionActivity.this, "reaction", score);
+            final PostHighScore newHighscore = new PostHighScore(ReactionActivity.this, "reaction",
+                    score);
             newHighscore.enterName();
         }
     }
