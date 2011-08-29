@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent" android:orientation="vertical">
+    <TextView android:text="Sprint Instructions:" android:layout_width="wrap_content" android:id="@+id/textView1" android:layout_height="wrap_content" android:layout_gravity="center_horizontal" android:textStyle="bold"></TextView>    
+    <TextView android:text=" Move TWO fingers in running motion" android:layout_width="wrap_content" android:id="@+id/textView2" android:layout_height="wrap_content" android:layout_gravity="center_horizontal"></TextView>
+    <TextView android:text=" AS FAST AS YOU CAN!!!" android:layout_width="wrap_content" android:id="@+id/textView2" android:layout_height="wrap_content" android:layout_gravity="center_horizontal"></TextView>
+
+    <Button android:text="START SPRINT" android:id="@+id/button2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center_horizontal" android:onClick="startGame"></Button>
+</LinearLayout>
