@@ -1,17 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_height="match_parent" android:layout_width="match_parent"
-	android:background="@drawable/menu2" android:id="@+id/mainLayout">
-	<Button android:layout_width="match_parent" android:onClick="onNewGameClick"
-		android:layout_height="wrap_content" android:text="New Game"
-		android:id="@+id/new_game_button" android:layout_above="@+id/practice_button"></Button>
-	<Button android:layout_width="match_parent" android:onClick="onHighScoreClick"
-		android:layout_height="wrap_content" android:text="High Scores"
-		android:id="@+id/high_score_button" android:layout_above="@+id/quit_button"></Button>
-	<Button android:layout_width="match_parent" android:onClick="onPracticeClick"
-		android:layout_height="wrap_content" android:text="Practice"
-		android:id="@+id/practice_button" android:layout_above="@+id/high_score_button"></Button>
-	<Button android:layout_width="match_parent" android:onClick="onQuitClick"
-		android:layout_height="wrap_content" android:text="Quit" android:id="@+id/quit_button"
-		android:layout_alignParentBottom="true"></Button>
+    android:layout_height="fill_parent" android:layout_width="fill_parent"
+    android:background="@drawable/menu2" android:id="@+id/mainLayout">
+    <Button android:layout_width="fill_parent" android:onClick="onNewGameClick"
+        android:layout_height="wrap_content" android:text="New Game"
+        android:id="@+id/new_game_button" android:layout_above="@+id/practice_button"></Button>
+    <Button android:layout_width="fill_parent" android:onClick="onPracticeClick"
+        android:layout_height="wrap_content" android:text="Practice"
+        android:id="@+id/practice_button" android:layout_above="@+id/high_score_button"></Button>
+    <Button android:layout_width="fill_parent" android:onClick="onHighScoreClick"
+        android:layout_height="wrap_content" android:text="High Scores"
+        android:id="@+id/high_score_button" android:layout_alignParentBottom="true"></Button>
 </RelativeLayout>

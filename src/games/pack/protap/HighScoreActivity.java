@@ -13,6 +13,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
@@ -82,9 +83,6 @@ public class HighScoreActivity extends Activity {
     }
 
     public class HighScoreDownload extends AsyncTask<URL, Integer, Void> {
-        private NodeList names;
-        private NodeList scores;
-        private NodeList ranks;
         private HttpResponse response;
 
         private final ProgressDialog dialog = new ProgressDialog(
@@ -118,49 +116,51 @@ public class HighScoreActivity extends Activity {
 
         protected void onPostExecute(final Void unused) {
             if (response != null) {
-                DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory
+                final DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory
                         .newInstance();
                 InputStream in;
+                NodeList ranks = null, names = null, scores = null;
                 try {
-                    DocumentBuilder docBuillder = docBuilderFactory
+                    final DocumentBuilder docBuillder = docBuilderFactory
                             .newDocumentBuilder();
                     in = response.getEntity().getContent();
-                    Document doc = docBuillder.parse(in);
+                    final Document doc = docBuillder.parse(in);
                     ranks = doc.getElementsByTagName("rank");
                     names = doc.getElementsByTagName("name");
                     scores = doc.getElementsByTagName("score");
                 } catch (ParserConfigurationException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 } catch (SAXException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 } catch (IOException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
 
                 for (int i = 0; i < names.getLength(); i++) {
-
-                    TableRow tr = new TableRow(HighScoreActivity.this);
+                    final TableRow tr = new TableRow(HighScoreActivity.this);
                     highScoreTable.addView(tr);
 
-                    TextView rankText = new TextView(HighScoreActivity.this);
-                    rankText.setText(ranks.item(i).getTextContent());
+                    final TextView rankText = new TextView(HighScoreActivity.this);
+                    rankText.setText(ranks.item(i).getFirstChild().getNodeValue());
                     rankText.setTextColor(Color.WHITE);
                     tr.addView(rankText);
 
-                    TextView nameText = new TextView(HighScoreActivity.this);
-                    nameText.setText(names.item(i).getTextContent());
+                    final TextView nameText = new TextView(HighScoreActivity.this);
+                    Node n = names.item(i).getFirstChild();
+                    if (n == null)
+                    {
+                        nameText.setText("");
+                    }
+                    else{
+                        nameText.setText(n.getNodeValue());
+                    }
                     nameText.setTextColor(Color.WHITE);
                     tr.addView(nameText);
 
-                    TextView scoreText = new TextView(HighScoreActivity.this);
-                    scoreText.setText(scores.item(i).getTextContent());
+                    final TextView scoreText = new TextView(HighScoreActivity.this);
+                    scoreText.setText(scores.item(i).getFirstChild().getNodeValue());
                     scoreText.setTextColor(Color.WHITE);
                     tr.addView(scoreText);
-
-                    Log.i("TABLE ROW", "Table row added");
                 } // for
                 dialog.dismiss();
             } // if response not null

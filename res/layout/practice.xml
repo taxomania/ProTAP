@@ -1,25 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/practiceLayout"
-	android:layout_height="match_parent" android:layout_width="match_parent"
-	android:orientation="vertical" android:background="@drawable/bg">
-	<TextView android:text="CHOOSE GAME:" android:layout_width="wrap_content"
-		android:id="@+id/textView1" android:layout_gravity="center_horizontal"
-		android:layout_height="wrap_content" android:textStyle="bold"></TextView>
-	<TableLayout android:layout_width="match_parent"
-		android:id="@+id/tableLayout1" android:layout_height="match_parent">
-		<!-- <Button android:text="SPRINT CHALLENGE" android:id="@+id/sprintbutton" 
-			android:layout_width="wrap_content" android:layout_height="wrap_content" 
-			android:onClick="onSprintClick"></Button> <Button android:text="ARCHERY CHALLENGE" 
-			android:id="@+id/archerybutton" android:layout_width="wrap_content" android:layout_height="wrap_content" 
-			android:onClick="onArcheryClick"></Button> -->
-		<Button android:text="BOXING CHALLENGE" android:id="@+id/boxingbutton"
-			android:layout_width="wrap_content" android:layout_height="wrap_content"
-			android:onClick="onBoxingClick"></Button>
-		<Button android:text="REACTION CHALLENGE" android:id="@+id/reactionbutton"
-			android:layout_width="wrap_content" android:layout_height="wrap_content"
-			android:onClick="onReactionClick"></Button>
-		<!--<Button android:text="PENALTY CHALLENGE" android:id="@+id/penaltybutton" 
-			android:layout_width="wrap_content" android:layout_height="wrap_content" 
-			android:onClick="onPenaltyClick"></Button> -->
-	</TableLayout>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/practiceLayout" android:layout_height="fill_parent"
+    android:layout_width="fill_parent" android:orientation="vertical"
+    android:background="@drawable/bg">
+    <TextView android:text="CHOOSE GAME:" android:layout_width="wrap_content"
+        android:id="@+id/textView1" android:layout_gravity="center_horizontal"
+        android:layout_height="wrap_content" android:textStyle="bold"></TextView>
+    <TableLayout android:layout_width="fill_parent" android:id="@+id/tableLayout1"
+        android:layout_height="fill_parent">
+        <Button android:text="BOXING CHALLENGE" android:id="@+id/boxingbutton"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:onClick="onBoxingClick"></Button>
+        <Button android:text="REACTION CHALLENGE" android:id="@+id/reactionbutton"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:onClick="onReactionClick"></Button>
+    </TableLayout>
 </LinearLayout>
