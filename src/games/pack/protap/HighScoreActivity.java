@@ -100,7 +100,7 @@ public class HighScoreActivity extends Activity {
         }
 
         @Override
-        protected HttpResponse doInBackground(String... params) {
+        protected HttpResponse doInBackground(final String... params) {
             final HttpClient client = new DefaultHttpClient();
             try {
                 final HttpGet request = new HttpGet(params[0]);
@@ -165,7 +165,7 @@ public class HighScoreActivity extends Activity {
                     scoreText.setGravity(Gravity.CENTER);
                     tr.addView(scoreText);
                 } // for
-                dialog.dismiss();
+                this.dialog.dismiss();
             } // if response not null
         } // onPostExecute
     } // class HighScoreDownload

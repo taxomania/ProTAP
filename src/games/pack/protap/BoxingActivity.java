@@ -30,8 +30,7 @@ public class BoxingActivity extends PracticeBoxingActivity {
                         finish();
                     }
                 });
-        final AlertDialog alert = builder.create();
-        alert.show();
+        builder.create().show();
         if (finalScore > sHighScore) {
             sHighScore = finalScore;
             new PostTopScore(this, PostTopScore.BOXING).execute(sHighScore);

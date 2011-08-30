@@ -78,8 +78,7 @@ public class PracticeBoxingActivity extends Activity {
                         finish();
                     }
                 });
-        final AlertDialog alert = builder.create();
-        alert.show();
+        builder.create().show();
     }
 
     public void addTap(final View view) {
