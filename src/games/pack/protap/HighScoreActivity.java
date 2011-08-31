@@ -31,8 +31,8 @@ import android.widget.TextView;
 
 public class HighScoreActivity extends Activity {
     private TableLayout mHighScoreTable;
-    private static final String REACTION_URL = "http://pro-tap.appspot.com/leaderboard?type=reaction";
-    private static final String BOXING_URL = "http://pro-tap.appspot.com/leaderboard?type=boxing";
+    private static final String REACTION_URL = "http://pro-tap.appspot.com/reaction";
+    private static final String BOXING_URL = "http://pro-tap.appspot.com/boxing";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

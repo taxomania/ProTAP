@@ -26,14 +26,18 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 public class PostHighScore {
-    private static final String APP_ENGINE_URL = "http://pro-tap.appspot.com/leaderboard";
-    private String mEntity, mScore;
+    private static final String REACTION_URL = "http://pro-tap.appspot.com/postreaction";
+    private static final String BOXING_URL = "http://pro-tap.appspot.com/postboxing";
+    public static final int REACTION = 0;
+    public static final int BOXING = 1;
+    private String mScore;
     private Context mContext;
+    private int mType;
 
-    public PostHighScore(final Context c, final String e, final int s) {
-        mEntity = e;
+    public PostHighScore(final Context c, final int s, final int t) {
         mScore = Integer.toString(s);
         mContext = c;
+        mType = t;
     }
 
     public void enterName() {
@@ -47,8 +51,7 @@ public class PostHighScore {
                         final InputMethodManager imm = (InputMethodManager) mContext
                                 .getSystemService(Context.INPUT_METHOD_SERVICE);
                         imm.hideSoftInputFromWindow(userName.getWindowToken(), 0);
-                        new HighScorePoster().execute(APP_ENGINE_URL, mEntity, userName.getText()
-                                .toString(), mScore);
+                        postHighScore(userName.getText().toString());
                     }
                 }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     public void onClick(final DialogInterface dialog, final int whichButton) {
@@ -57,6 +60,21 @@ public class PostHighScore {
                 });
         final AlertDialog alert = builder.create();
         alert.show();
+    }
+
+    private void postHighScore(final String name) {
+        final String url;
+        switch (mType) {
+            case REACTION:
+                url = REACTION_URL;
+                break;
+            case BOXING:
+                url = BOXING_URL;
+                break;
+            default:
+                return;
+        }
+        new HighScorePoster().execute(url, name, mScore);
     }
 
     public class HighScorePoster extends AsyncTask<String, Void, HttpResponse> {
@@ -70,9 +88,9 @@ public class PostHighScore {
 
         @Override
         protected HttpResponse doInBackground(final String... params) {
-            if (params.length < 4) return null;
+            if (params.length < 3) return null;
             final HttpClient client = new DefaultHttpClient();
-            HttpPost post;
+            final HttpPost post;
             try {
                 post = new HttpPost(params[0]);
             } catch (IllegalArgumentException e) {
@@ -80,9 +98,8 @@ public class PostHighScore {
                 return null;
             }
             final List<NameValuePair> pairs = new ArrayList<NameValuePair>();
-            pairs.add(new BasicNameValuePair("type", params[1]));
-            pairs.add(new BasicNameValuePair("content", params[2]));
-            pairs.add(new BasicNameValuePair("score", params[3]));
+            pairs.add(new BasicNameValuePair("content", params[1]));
+            pairs.add(new BasicNameValuePair("score", params[2]));
             try {
                 post.setEntity(new UrlEncodedFormEntity(pairs));
             } catch (UnsupportedEncodingException e) {
@@ -95,7 +112,6 @@ public class PostHighScore {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
             return null;
         }
 
@@ -106,6 +122,7 @@ public class PostHighScore {
             }
             if (response == null) {
                 Toast.makeText(mContext, "Error posting", Toast.LENGTH_SHORT).show();
+                return;
             }
             if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
                 Toast.makeText(mContext,
