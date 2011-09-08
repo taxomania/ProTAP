@@ -9,8 +9,8 @@ public class TopScorePrefs {
     private static final String KEY_REACTION = "reaction_score";
     private static final int DEFAULT = 0;
 
-    private SharedPreferences mPrefs;
-    private Context mCtx;
+    private final Context mCtx;
+    private final SharedPreferences mPrefs;
 
     public TopScorePrefs(final Context c) {
         mCtx = c;
@@ -34,7 +34,7 @@ public class TopScorePrefs {
     } // edit
 
     public class Editor {
-        private SharedPreferences.Editor mEdit;
+        private final SharedPreferences.Editor mEdit;
 
         public Editor() {
             mEdit = mPrefs.edit();

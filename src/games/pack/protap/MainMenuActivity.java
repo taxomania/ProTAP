@@ -27,13 +27,13 @@ public class MainMenuActivity extends Activity {
         setContentView(R.layout.main_menu);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         RatePrompt.appLaunched(this);
-    }
+    } // onCreate(Bundle)
 
     @Override
     protected void onResume() {
         super.onResume();
-        new GetScores().execute();
-    }
+        new GetScores(this).execute();
+    } // onResume()
 
     private static final int MENU_NEW_GAME = Menu.FIRST;
     private static final int MENU_PRACTICE = Menu.FIRST + 1;
@@ -47,7 +47,7 @@ public class MainMenuActivity extends Activity {
         menu.add(Menu.NONE, MENU_HIGHSCORES, MENU_HIGHSCORES, "High Scores");
         menu.add(Menu.NONE, MENU_RESET, MENU_RESET, "Reset High Scores");
         return true;
-    }
+    } // onCreateOptionsMenu(Menu)
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
@@ -66,47 +66,52 @@ public class MainMenuActivity extends Activity {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
-        }
-    }
+        } // switch
+    } // onOptionsItemSelected(MenuItem)
+
+    private void startActivity(final Class<?> className) {
+        startActivity(new Intent(this, className));
+    } // startActivity(Class)
 
     private void newGame() {
-        startActivity(new Intent(this, ReactionActivity.class));
-    }
+        startActivity(ReactionActivity.class);
+    } // newGame()
 
     private void highscores() {
-        startActivity(new Intent(this, HighScoreActivity.class));
-    }
+        startActivity(HighScoreActivity.class);
+    } // highscores()
 
     private void practice() {
-        startActivity(new Intent(this, PracticeActivity.class));
-    }
+        startActivity(PracticeActivity.class);
+    } // practice()
 
-    public void onNewGameClick(View view) {
+    public void onNewGameClick(final View view) {
         newGame();
-    }
+    } // onNewGameClick(View)
 
-    public void onHighScoreClick(View view) {
+    public void onHighScoreClick(final View view) {
         highscores();
-    }
+    } // onHighScoreClick(View)
 
-    public void onPracticeClick(View view) {
+    public void onPracticeClick(final View view) {
         practice();
-    }
+    } // onPracticeClick(View)
 
     private final class GetScores extends RetrieveTopScore {
-        public GetScores() {
-            super(MainMenuActivity.this, BOTH);
-        }
+        public GetScores(final Context context) {
+            super(context);
+        } // GetScores(Context)
 
         @Override
-        protected void onPostExecute(Integer[] result) {
-            if (result != null) {
-                ((TextView) findViewById(R.id.topBoxing)).setText("Boxing: " + result[BOXING]);
-                ((TextView) findViewById(R.id.topReaction))
-                        .setText("Reaction: " + result[REACTION]);
-            }
+        protected Integer[] doTask(final TopScorePrefs prefs) {
+            return new Integer[] { prefs.getBoxingScore(), prefs.getReactionScore() };
+        } // doTask(TopScorePrefs)
 
-        } // onPostExecute
+        @Override
+        protected void setResult(Integer[] result) {
+            ((TextView) findViewById(R.id.topBoxing)).setText("Boxing: " + result[0]);
+            ((TextView) findViewById(R.id.topReaction)).setText("Reaction: " + result[1]);
+        } // setResult(Integer[])
     } // GetScores
 
     private final class ResetTopScore extends AsyncTask<Void, Void, Boolean> {
@@ -123,7 +128,7 @@ public class MainMenuActivity extends Activity {
 
         @Override
         protected void onPostExecute(final Boolean result) {
-            new GetScores().execute();
+            new GetScores(mCtx).execute();
         } // onPostExecute(Boolean)
     } // ResetTopScore
 } // MainMenuActivity

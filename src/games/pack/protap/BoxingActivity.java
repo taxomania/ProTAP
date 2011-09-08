@@ -5,8 +5,10 @@ package games.pack.protap;
 
 import games.pack.protap.localscore.PostBoxingTopScore;
 import games.pack.protap.localscore.RetrieveTopScore;
+import games.pack.protap.localscore.TopScorePrefs;
 import games.pack.protap.upload.PostBoxingHighScore;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
@@ -20,8 +22,8 @@ public class BoxingActivity extends PracticeBoxingActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        new GetBoxing().execute();
-    }
+        new RetrieveBoxingTopScore(this).execute();
+    } // onCreate(Bundle)
 
     @Override
     protected void end() {
@@ -41,14 +43,21 @@ public class BoxingActivity extends PracticeBoxingActivity {
         }
     } // end
 
-    private final class GetBoxing extends RetrieveTopScore {
-        public GetBoxing() {
-            super(BoxingActivity.this, BOXING);
-        }
+    private final class RetrieveBoxingTopScore extends RetrieveTopScore {
+        public RetrieveBoxingTopScore(final Context context) {
+            super(context);
+        } // RetrieveReactionTopScore(Context)
 
         @Override
-        protected void onPostExecute(final Integer[] result) {
-            if (result[0] != null) sHighScore = result[0];
-        }
-    } // GetBoxing
+        protected Integer[] doTask(final TopScorePrefs prefs) {
+            return new Integer[] { prefs.getBoxingScore() };
+        } // doTask(TopScorePrefs)
+
+        @Override
+        protected void setResult(Integer[] result) {
+            if (result[0] != null) {
+                sHighScore = result[0];
+            } // if
+        } // setResult(Integer[])
+    } // RetrieveReactionTopScore
 } // BoxingActivity

@@ -5,8 +5,10 @@ package games.pack.protap;
 
 import games.pack.protap.localscore.PostReactionTopScore;
 import games.pack.protap.localscore.RetrieveTopScore;
+import games.pack.protap.localscore.TopScorePrefs;
 import games.pack.protap.upload.PostReactionHighScore;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,9 +23,8 @@ public class ReactionActivity extends PracticeReactionActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        new GetReaction().execute();
-    }
+        new RetrieveReactionTopScore(this).execute();
+    } // onCreate(Bundle)
 
     @Override
     protected void showCompleteAlert() {
@@ -49,15 +50,21 @@ public class ReactionActivity extends PracticeReactionActivity {
         }
     } // showCompleteAlert
 
-    private final class GetReaction extends RetrieveTopScore {
-        public GetReaction() {
-            super(ReactionActivity.this, REACTION);
-        }
+    private final class RetrieveReactionTopScore extends RetrieveTopScore {
+        public RetrieveReactionTopScore(final Context context) {
+            super(context);
+        } // RetrieveReactionTopScore(Context)
 
         @Override
-        protected void onPostExecute(final Integer[] result) {
-            if (result[0] != null) sHighScore = result[0];
-        }
+        protected Integer[] doTask(final TopScorePrefs prefs) {
+            return new Integer[] { prefs.getReactionScore() };
+        } // doTask(TopScorePrefs)
 
-    }
+        @Override
+        protected void setResult(Integer[] result) {
+            if (result[0] != null) {
+                sHighScore = result[0];
+            } // if
+        } // setResult(Integer[])
+    } // RetrieveReactionTopScore
 } // ReactionActivity

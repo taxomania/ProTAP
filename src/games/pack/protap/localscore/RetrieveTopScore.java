@@ -4,32 +4,24 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 public abstract class RetrieveTopScore extends AsyncTask<Void, Void, Integer[]> {
-    public static final int BOXING = 0;
-    public static final int REACTION = 1;
-    public static final int BOTH = 2;
+    private final Context mCtx;
 
-    private Context mCtx;
-    private int mPref;
-    public RetrieveTopScore(final Context c, final int pref) {
-        mCtx = c;
-        mPref = pref;
-    }
+    public RetrieveTopScore(final Context context) {
+        mCtx = context;
+    } // RetrieveTopScore(Context)
 
     @Override
     protected final Integer[] doInBackground(final Void... noParams) {
-        final TopScorePrefs prefs = new TopScorePrefs(mCtx);
-        switch (mPref) {
-            case BOXING:
-                return new Integer[]{prefs.getBoxingScore()};
-            case REACTION:
-                return new Integer[]{prefs.getReactionScore()};
-            case BOTH:
-                return new Integer[]{prefs.getBoxingScore(), prefs.getReactionScore()};
-            default:
-                return null;
-        } // switch
+        return doTask(new TopScorePrefs(mCtx));
     } // doInBackground
 
     @Override
-    protected abstract void onPostExecute(final Integer[] result);
-}
+    protected final void onPostExecute(final Integer[] result) {
+        if (result != null) {
+            setResult(result);
+        } // if
+    } // onPostExecute
+
+    protected abstract Integer[] doTask(TopScorePrefs prefs);
+    protected abstract void setResult(Integer[] result);
+} // RetrieveTopScore
