@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="hello">Hello World, ProTapActivity!</string>
     <string name="app_name">ProTap</string>
-    <string name="new_game">NEW GAME</string>
-    <string name="no_players">NUMBER OF PLAYERS</string>
-    <string name="fullversion">Please buy the full version of ProTAP</string>
+    <string name="rate">If you enjoy playing ProTAP, would you mind taking the time to rate it? Thanks for your support!</string>
 </resources>
