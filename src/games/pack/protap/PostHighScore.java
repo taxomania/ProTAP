@@ -25,19 +25,16 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class PostHighScore {
-    private static final String REACTION_URL = "http://pro-tap.appspot.com/postreaction";
-    private static final String BOXING_URL = "http://pro-tap.appspot.com/postboxing";
-    public static final int REACTION = 0;
-    public static final int BOXING = 1;
-    private String mScore;
-    private Context mContext;
-    private int mType;
+public abstract class PostHighScore {
+    private final Context mContext;
+    private final String mScore;
+    private final String mUrl;
 
-    public PostHighScore(final Context c, final int s, final int t) {
-        mScore = Integer.toString(s);
-        mContext = c;
-        mType = t;
+
+    public PostHighScore(final Context context, final int score, final String url) {
+        mScore = Integer.toString(score);
+        mContext = context;
+        mUrl = url;
     }
 
     public void enterName() {
@@ -62,22 +59,11 @@ public class PostHighScore {
         alert.show();
     }
 
-    private void postHighScore(final String name) {
-        final String url;
-        switch (mType) {
-            case REACTION:
-                url = REACTION_URL;
-                break;
-            case BOXING:
-                url = BOXING_URL;
-                break;
-            default:
-                return;
-        }
-        new HighScorePoster().execute(url, name, mScore);
-    }
+    private void postHighScore(final String name){
+        new HighScorePoster().execute(mUrl, name, mScore);
+    } // postHighScore
 
-    public class HighScorePoster extends AsyncTask<String, Void, HttpResponse> {
+    private final class HighScorePoster extends AsyncTask<String, Void, HttpResponse> {
         private final ProgressDialog dialog = new ProgressDialog(mContext);
 
         @Override
@@ -133,4 +119,4 @@ public class PostHighScore {
         }
     }
 
-}
+} // PostHighScore

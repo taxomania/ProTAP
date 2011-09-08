@@ -42,7 +42,7 @@ public class ReactionActivity extends PracticeReactionActivity {
         if (score > sHighScore) {
             sHighScore = score;
             new PostTopScore(this, PostTopScore.REACTION).execute(sHighScore);
-            new PostHighScore(ReactionActivity.this, score, PostHighScore.REACTION).enterName();
+            new PostReactionHighScore(ReactionActivity.this, score).enterName();
         }
     } // showCompleteAlert
 

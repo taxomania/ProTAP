@@ -34,7 +34,7 @@ public class BoxingActivity extends PracticeBoxingActivity {
         if (finalScore > sHighScore) {
             sHighScore = finalScore;
             new PostTopScore(this, PostTopScore.BOXING).execute(sHighScore);
-            new PostHighScore(BoxingActivity.this, finalScore, PostHighScore.BOXING).enterName();
+            new PostBoxingHighScore(BoxingActivity.this, finalScore).enterName();
         }
     } // end
 
