@@ -2,17 +2,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/practiceLayout" android:layout_height="fill_parent"
     android:layout_width="fill_parent" android:orientation="vertical"
-    android:background="@drawable/bg">
+    android:padding="5dip" android:background="@drawable/bg">
     <TextView android:text="CHOOSE GAME:" android:layout_width="wrap_content"
         android:id="@+id/textView1" android:layout_gravity="center_horizontal"
-        android:layout_height="wrap_content" android:textStyle="bold"></TextView>
-    <TableLayout android:layout_width="fill_parent" android:id="@+id/tableLayout1"
-        android:layout_height="fill_parent">
-        <Button android:text="BOXING CHALLENGE" android:id="@+id/boxingbutton"
-            android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:onClick="onBoxingClick"></Button>
-        <Button android:text="REACTION CHALLENGE" android:id="@+id/reactionbutton"
-            android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:onClick="onReactionClick"></Button>
-    </TableLayout>
+        android:layout_height="wrap_content" android:textColor="@color/white"
+        android:textStyle="bold" android:paddingBottom="5dip" />
+
+    <Button android:text="BOXING CHALLENGE" android:id="@+id/boxingbutton"
+        android:layout_width="fill_parent" android:layout_height="wrap_content"
+        android:onClick="onBoxingClick" />
+    <Button android:text="REACTION CHALLENGE" android:id="@+id/reactionbutton"
+        android:layout_width="fill_parent" android:layout_height="wrap_content"
+        android:onClick="onReactionClick" />
 </LinearLayout>
