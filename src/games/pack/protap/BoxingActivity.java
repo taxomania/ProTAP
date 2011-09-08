@@ -3,6 +3,8 @@
  */
 package games.pack.protap;
 
+import games.pack.protap.localscore.PostBoxingTopScore;
+import games.pack.protap.localscore.RetrieveTopScore;
 import games.pack.protap.upload.PostBoxingHighScore;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -34,7 +36,7 @@ public class BoxingActivity extends PracticeBoxingActivity {
         builder.create().show();
         if (finalScore > sHighScore) {
             sHighScore = finalScore;
-            new PostTopScore(this, PostTopScore.BOXING).execute(sHighScore);
+            new PostBoxingTopScore(BoxingActivity.this).execute(sHighScore);
             new PostBoxingHighScore(BoxingActivity.this, finalScore).enterName();
         }
     } // end

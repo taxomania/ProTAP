@@ -3,6 +3,8 @@
  */
 package games.pack.protap;
 
+import games.pack.protap.localscore.PostReactionTopScore;
+import games.pack.protap.localscore.RetrieveTopScore;
 import games.pack.protap.upload.PostReactionHighScore;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -42,7 +44,7 @@ public class ReactionActivity extends PracticeReactionActivity {
         alert.show();
         if (score > sHighScore) {
             sHighScore = score;
-            new PostTopScore(this, PostTopScore.REACTION).execute(sHighScore);
+            new PostReactionTopScore(ReactionActivity.this).execute(sHighScore);
             new PostReactionHighScore(ReactionActivity.this, score).enterName();
         }
     } // showCompleteAlert

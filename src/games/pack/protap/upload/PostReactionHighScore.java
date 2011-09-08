@@ -2,7 +2,7 @@ package games.pack.protap.upload;
 
 import android.content.Context;
 
-public class PostReactionHighScore extends PostHighScore {
+public final class PostReactionHighScore extends PostHighScore {
     private static final String URL = "http://pro-tap.appspot.com/postreaction";
 
     public PostReactionHighScore(final Context context, final int score) {

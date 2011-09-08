@@ -3,9 +3,13 @@
  */
 package games.pack.protap;
 
+import games.pack.protap.localscore.RetrieveTopScore;
+import games.pack.protap.localscore.TopScorePrefs;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -58,7 +62,7 @@ public class MainMenuActivity extends Activity {
                 highscores();
                 return true;
             case MENU_RESET:
-                new ResetScores().execute();
+                new ResetTopScore(this).execute();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -69,11 +73,11 @@ public class MainMenuActivity extends Activity {
         startActivity(new Intent(this, ReactionActivity.class));
     }
 
-    private void highscores(){
+    private void highscores() {
         startActivity(new Intent(this, HighScoreActivity.class));
     }
 
-    private void practice(){
+    private void practice() {
         startActivity(new Intent(this, PracticeActivity.class));
     }
 
@@ -105,14 +109,21 @@ public class MainMenuActivity extends Activity {
         } // onPostExecute
     } // GetScores
 
-    private final class ResetScores extends PostTopScore {
-        public ResetScores() {
-            super(MainMenuActivity.this, RESET);
-        }
+    private final class ResetTopScore extends AsyncTask<Void, Void, Boolean> {
+        private final Context mCtx;
+
+        public ResetTopScore(final Context context) {
+            mCtx = context;
+        } // ResetTopScore(Context)
 
         @Override
-        protected void onPostExecute(Boolean result) {
+        protected Boolean doInBackground(final Void... noParams) {
+            return new TopScorePrefs(mCtx).edit().reset();
+        } // doInBackground(Void...)
+
+        @Override
+        protected void onPostExecute(final Boolean result) {
             new GetScores().execute();
-        }
-    } // ResetScores
-}
+        } // onPostExecute(Boolean)
+    } // ResetTopScore
+} // MainMenuActivity

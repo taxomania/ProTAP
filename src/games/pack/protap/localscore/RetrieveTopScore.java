@@ -1,12 +1,12 @@
-package games.pack.protap;
+package games.pack.protap.localscore;
 
 import android.content.Context;
 import android.os.AsyncTask;
 
 public abstract class RetrieveTopScore extends AsyncTask<Void, Void, Integer[]> {
-    static final int BOXING = 0;
-    static final int REACTION = 1;
-    static final int BOTH = 2;
+    public static final int BOXING = 0;
+    public static final int REACTION = 1;
+    public static final int BOTH = 2;
 
     private Context mCtx;
     private int mPref;

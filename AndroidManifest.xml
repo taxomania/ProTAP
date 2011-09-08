@@ -15,7 +15,7 @@
         <activity android:name="PracticeActivity"></activity>
         <activity android:name="BoxingActivity"></activity>
         <activity android:name="PracticeReactionActivity"></activity>
-        <activity android:name="PracticeBoxingActivity"></activity>
+        <activity android:name=".PracticeBoxingActivity"></activity>
     </application>
     <uses-permission android:name="android.permission.INTERNET" />
 

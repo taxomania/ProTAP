@@ -1,4 +1,4 @@
-package games.pack.protap;
+package games.pack.protap.localscore;
 
 import android.content.Context;
 import android.content.SharedPreferences;
