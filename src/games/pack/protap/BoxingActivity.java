@@ -3,6 +3,7 @@
  */
 package games.pack.protap;
 
+import games.pack.protap.upload.PostBoxingHighScore;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;

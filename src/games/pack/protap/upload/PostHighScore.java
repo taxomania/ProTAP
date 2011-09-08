@@ -1,4 +1,4 @@
-package games.pack.protap;
+package games.pack.protap.upload;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -30,12 +30,11 @@ public abstract class PostHighScore {
     private final String mScore;
     private final String mUrl;
 
-
     public PostHighScore(final Context context, final int score, final String url) {
         mScore = Integer.toString(score);
         mContext = context;
         mUrl = url;
-    }
+    } // PostHighScore(Context, int, String)
 
     public void enterName() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
@@ -57,11 +56,11 @@ public abstract class PostHighScore {
                 });
         final AlertDialog alert = builder.create();
         alert.show();
-    }
+    } // enterName()
 
-    private void postHighScore(final String name){
+    private void postHighScore(final String name) {
         new HighScorePoster().execute(mUrl, name, mScore);
-    } // postHighScore
+    } // postHighScore(String)
 
     private final class HighScorePoster extends AsyncTask<String, Void, HttpResponse> {
         private final ProgressDialog dialog = new ProgressDialog(mContext);
@@ -70,7 +69,7 @@ public abstract class PostHighScore {
         protected void onPreExecute() {
             this.dialog.setMessage("Uploading new high score...");
             this.dialog.show();
-        }
+        } // onPreExecute()
 
         @Override
         protected HttpResponse doInBackground(final String... params) {
@@ -82,7 +81,7 @@ public abstract class PostHighScore {
             } catch (IllegalArgumentException e) {
                 e.printStackTrace();
                 return null;
-            }
+            } // try
             final List<NameValuePair> pairs = new ArrayList<NameValuePair>();
             pairs.add(new BasicNameValuePair("content", params[1]));
             pairs.add(new BasicNameValuePair("score", params[2]));
@@ -90,33 +89,32 @@ public abstract class PostHighScore {
                 post.setEntity(new UrlEncodedFormEntity(pairs));
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
-            }
+            } // try
             try {
                 return client.execute(post);
             } catch (ClientProtocolException e) {
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
-            }
+            } // try
             return null;
-        }
+        } // doInBackground(String...)
 
         @Override
         protected void onPostExecute(final HttpResponse response) {
             if (this.dialog.isShowing()) {
                 this.dialog.dismiss();
-            }
+            } // if
             if (response == null) {
                 Toast.makeText(mContext, "Error posting", Toast.LENGTH_SHORT).show();
                 return;
-            }
+            } // if
             if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
                 Toast.makeText(mContext,
                         "Error Whilst Posting: " + response.getStatusLine().getReasonPhrase(),
                         Toast.LENGTH_LONG).show();
-            }
-
-        }
-    }
+            } // if
+        } // onPostExecute(HttpResponse)
+    } // HighScorePoster
 
 } // PostHighScore
