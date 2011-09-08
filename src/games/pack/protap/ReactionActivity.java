@@ -3,7 +3,7 @@
  */
 package games.pack.protap;
 
-import games.pack.protap.localscore.PostReactionTopScore;
+import games.pack.protap.localscore.PostTopScore;
 import games.pack.protap.localscore.RetrieveTopScore;
 import games.pack.protap.localscore.TopScorePrefs;
 import games.pack.protap.upload.PostReactionHighScore;
@@ -67,4 +67,16 @@ public class ReactionActivity extends PracticeReactionActivity {
             } // if
         } // setResult(Integer[])
     } // RetrieveReactionTopScore
+
+    private final class PostReactionTopScore extends PostTopScore {
+        public PostReactionTopScore(final Context context) {
+            super(context);
+        } // PostReactionTopScore
+
+        @Override
+        protected Boolean postTask(final TopScorePrefs.Editor edit, final Integer score) {
+            return edit.putReactionScore(score).commit();
+        } // postTask(TopScorePrefs.Editor, Integer)
+    } // PostReactionTopScore
+
 } // ReactionActivity

@@ -15,5 +15,5 @@ public abstract class PostTopScore extends AsyncTask<Integer, Void, Boolean> {
         return postTask(new TopScorePrefs(mCtx).edit(), params[0]);
     } // doInBackground(Integer...)
 
-    abstract Boolean postTask(TopScorePrefs.Editor edit, Integer score);
+    protected abstract Boolean postTask(TopScorePrefs.Editor edit, Integer score);
 } // PostTopScore
