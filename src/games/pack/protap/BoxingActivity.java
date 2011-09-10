@@ -16,22 +16,30 @@ import android.os.Bundle;
  * @author Tariq
  *
  */
-public class BoxingActivity extends PracticeBoxingActivity {
+public class BoxingActivity extends Boxing {
     private static int sHighScore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        showStartDialog();
         new RetrieveBoxingTopScore(this).execute();
     } // onCreate(Bundle)
 
     @Override
-    protected void onStart() {
-        super.onStart();
-    } // onStart()
+    void showStartDialog() {
+        new AlertDialog.Builder(this)
+                .setMessage("Tap the ball as many times as you can in 10s. Press GO to start")
+                .setCancelable(false)
+                .setPositiveButton("GO", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, final int id) {
+                        mTimer.start();
+                    } // onClick
+                }).create().show();
+    } // showStartDialog()
 
     @Override
-    protected void end() {
+    void end() {
         final int finalScore = Integer.parseInt(mCounterView.getText().toString());
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Your score: " + finalScore).setCancelable(true)
