@@ -43,11 +43,11 @@ public class ReactionActivity extends PracticeReactionActivity {
                 builder.setTitle("NEW HIGH SCORE");
             } // if
         } // if
-        final Intent boxingIntent = new Intent(this, BoxingActivity.class);
+
         builder.setMessage("Your time: " + mTime + "ms\nYour score: " + score).setCancelable(false)
                 .setPositiveButton("Continue to Boxing", new DialogInterface.OnClickListener() {
                     public void onClick(final DialogInterface dialog, final int id) {
-                        end(boxingIntent);
+                        end();
                     }
                 }).setNegativeButton("Quit to Main Menu", new DialogInterface.OnClickListener() {
                     public void onClick(final DialogInterface dialog, final int id) {
@@ -57,8 +57,8 @@ public class ReactionActivity extends PracticeReactionActivity {
     } // showCompleteAlert
 
     public final void end(){
-        finish();
-    }
+        end(new Intent(this, BoxingActivity.class));
+    } // end()
 
     private final class RetrieveReactionTopScore extends RetrieveTopScore {
         public RetrieveReactionTopScore(final Context context) {

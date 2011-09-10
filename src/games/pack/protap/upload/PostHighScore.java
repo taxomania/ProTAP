@@ -24,11 +24,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
 public abstract class PostHighScore {
+    private static String sName = "";
     private final Context mContext;
     private final String mScore;
     private final String mUrl;
@@ -43,28 +45,36 @@ public abstract class PostHighScore {
         final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         final EditText userName = new EditText(mContext);
         userName.setInputType(InputType.TYPE_CLASS_TEXT);
+        userName.setHint(sName);
         builder.setView(userName).setMessage("Enter Your Name")
                 .setPositiveButton("Done", new DialogInterface.OnClickListener() {
                     public void onClick(final DialogInterface dialog, final int whichButton) {
                         final InputMethodManager imm = (InputMethodManager) mContext
                                 .getSystemService(Context.INPUT_METHOD_SERVICE);
                         imm.hideSoftInputFromWindow(userName.getWindowToken(), 0);
-                        postHighScore(userName.getText().toString());
+                        final String name = userName.getText().toString();
+                        if (!TextUtils.isEmpty(name)){
+                            sName = name;
+                        } // if
+                        postHighScore(sName);
                     }
                 }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     public void onClick(final DialogInterface dialog, final int whichButton) {
                         dialog.dismiss();
-                        if (mContext instanceof ReactionActivity){
-                            ((ReactionActivity)mContext).end();
-                        }
-                        else if (mContext instanceof BoxingActivity){
-                            ((BoxingActivity)mContext).end();
-                        } // if
+                        continueGame();
                     }
                 });
         final AlertDialog alert = builder.create();
         alert.show();
     } // enterName()
+
+    private void continueGame(){
+        if (mContext instanceof ReactionActivity) {
+            ((ReactionActivity) mContext).end();
+        } else if (mContext instanceof BoxingActivity) {
+            ((BoxingActivity) mContext).finish();
+        } // if
+    } // continueGame()
 
     private void postHighScore(final String name) {
         new HighScorePoster().execute(mUrl, name, mScore);
@@ -113,6 +123,7 @@ public abstract class PostHighScore {
             if (this.dialog.isShowing()) {
                 this.dialog.dismiss();
             } // if
+            continueGame();
             if (response == null) {
                 Toast.makeText(mContext, "Error posting", Toast.LENGTH_SHORT).show();
                 return;
