@@ -39,12 +39,17 @@ public class BoxingActivity extends PracticeBoxingActivity {
                     public void onClick(final DialogInterface dialog, final int id) {
                         finish();
                     }
-                }).setNeutralButton("Upload Score", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        new PostBoxingHighScore(BoxingActivity.this, finalScore).enterName();
-                    }
-                }).create().show();
+                });
+
+        if (sHighScore > 0) {
+            builder.setNeutralButton("Upload Score", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(final DialogInterface dialog, final int which) {
+                    new PostBoxingHighScore(BoxingActivity.this, finalScore).enterName();
+                } // onClick(DialogInterface, int)
+            });
+        } // if
+        builder.create().show();
     } // end
 
     private final class RetrieveBoxingTopScore extends RetrieveTopScore {

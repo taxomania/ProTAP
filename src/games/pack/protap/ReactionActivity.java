@@ -45,12 +45,16 @@ public class ReactionActivity extends PracticeReactionActivity {
                     public void onClick(final DialogInterface dialog, final int id) {
                         finish();
                     }
-                }).setNeutralButton("Upload Score", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        new PostReactionHighScore(ReactionActivity.this, score).enterName();
-                    }
-                }).create().show();
+                });
+        if (sHighScore > 0) {
+            builder.setNeutralButton("Upload Score", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(final DialogInterface dialog, final int which) {
+                    new PostReactionHighScore(ReactionActivity.this, score).enterName();
+                } // onClick(DialogInterface, int)
+            });
+        } // if
+        builder.create().show();
     } // showCompleteAlert
 
     private final class RetrieveReactionTopScore extends RetrieveTopScore {
