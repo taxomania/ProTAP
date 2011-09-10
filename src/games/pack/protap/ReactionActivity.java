@@ -6,7 +6,7 @@ package games.pack.protap;
 import games.pack.protap.localscore.PostTopScore;
 import games.pack.protap.localscore.RetrieveTopScore;
 import games.pack.protap.localscore.TopScorePrefs;
-import games.pack.protap.upload.PostReactionHighScore;
+import games.pack.protap.upload.PostHighScore;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -29,8 +29,13 @@ public class ReactionActivity extends PracticeReactionActivity {
     @Override
     protected void showCompleteAlert() {
         final int score = score(mTime);
-        final Intent boxingIntent = new Intent(this, BoxingActivity.class);
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        if (score > sHighScore) {
+            builder.setTitle("NEW HIGH SCORE");
+            sHighScore = score;
+            new PostReactionTopScore(this).execute(sHighScore);
+        } // if
+        final Intent boxingIntent = new Intent(this, BoxingActivity.class);
         builder.setMessage("Your time: " + mTime + "ms\nYour score: " + score).setCancelable(false)
                 .setPositiveButton("Continue to Boxing", new DialogInterface.OnClickListener() {
                     public void onClick(final DialogInterface dialog, final int id) {
@@ -40,14 +45,12 @@ public class ReactionActivity extends PracticeReactionActivity {
                     public void onClick(final DialogInterface dialog, final int id) {
                         finish();
                     }
-                });
-        final AlertDialog alert = builder.create();
-        alert.show();
-        if (score > sHighScore) {
-            sHighScore = score;
-            new PostReactionTopScore(ReactionActivity.this).execute(sHighScore);
-            new PostReactionHighScore(ReactionActivity.this, score).enterName();
-        }
+                }).setNeutralButton("Upload Score", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        new PostReactionHighScore(ReactionActivity.this, score).enterName();
+                    }
+                }).create().show();
     } // showCompleteAlert
 
     private final class RetrieveReactionTopScore extends RetrieveTopScore {
@@ -78,5 +81,13 @@ public class ReactionActivity extends PracticeReactionActivity {
             return edit.putReactionScore(score).commit();
         } // postTask(TopScorePrefs.Editor, Integer)
     } // PostReactionTopScore
+
+    private final class PostReactionHighScore extends PostHighScore {
+        private static final String URL = "http://pro-tap.appspot.com/postreaction";
+
+        public PostReactionHighScore(final Context context, final int score) {
+            super(context, score, URL);
+        } // PostReactionHighScore(Context, int)
+    } // PostReactionHighScore
 
 } // ReactionActivity

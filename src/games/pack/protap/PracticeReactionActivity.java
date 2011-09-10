@@ -20,6 +20,7 @@ import android.view.View;
  */
 public class PracticeReactionActivity extends Activity {
     private long mStart;
+    private CountDownTimer mTimer;
     protected long mTime;
 
     @Override
@@ -27,33 +28,31 @@ public class PracticeReactionActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.reaction);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-    } // onCreate
-
-    @Override
-    protected void onStart() {
-        super.onStart();
         final double countdownTime1 = 3000 * Math.random();
         final long countdownTime = (countdownTime1 < 2000) ? 2000 : (long) countdownTime1;
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Press the button when it goes green. Press GO to start")
+        mTimer = new CountDownTimer(countdownTime, 100) {
+            @Override
+            public void onFinish() {
+                changeBackground();
+            } // onFinish()
+
+            @Override
+            public void onTick(final long millisUntilFinished) {
+            } // onTick(long)
+        };
+        showStartDialog();
+    } // onCreate
+
+    void showStartDialog() {
+        new AlertDialog.Builder(this)
+                .setMessage("Press the button when it goes green. Press GO to start")
                 .setCancelable(false)
                 .setPositiveButton("GO", new DialogInterface.OnClickListener() {
                     public void onClick(final DialogInterface dialog, final int id) {
-                        new CountDownTimer(countdownTime, 100) {
-                            @Override
-                            public void onFinish() {
-                                changeBackground();
-                            }
-
-                            @Override
-                            public void onTick(final long millisUntilFinished) {
-                            }
-                        }.start();
+                        mTimer.start();
                     }
-                });
-        final AlertDialog alert = builder.create();
-        alert.show();
-    } // onStart
+                }).create().show();
+    } // showStartDialog()
 
     protected void changeBackground() {
         setContentView(R.layout.reaction_green);
@@ -66,7 +65,7 @@ public class PracticeReactionActivity extends Activity {
         showCompleteAlert();
     }
 
-    protected void showCompleteAlert(){
+    protected void showCompleteAlert() {
         final Intent retryIntent = new Intent(this, PracticeReactionActivity.class);
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Your time: " + mTime + "ms\nYour score: " + score(mTime))
@@ -83,16 +82,22 @@ public class PracticeReactionActivity extends Activity {
         builder.create().show();
     }
 
-    protected void end(final Intent intent) {
+    protected final void end(final Intent intent) {
         finish();
         startActivity(intent);
     }
 
-    public void fail(final View view) {
+    public final void fail(final View view) {
         mTime += 2000;
     }
 
-    protected int score(long time) {
+    protected final int score(long time) {
         return (time > 500) ? 0 : (int) (500 - time);
     }
-}
+
+    @Override
+    protected void onDestroy() {
+        mTimer.cancel();
+        super.onDestroy();
+    } // onDestroy()
+} // PracticeReactionActivity

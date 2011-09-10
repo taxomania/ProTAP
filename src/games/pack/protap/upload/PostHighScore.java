@@ -38,7 +38,6 @@ public abstract class PostHighScore {
 
     public void enterName() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        builder.setTitle("NEW HIGHSCORE!");
         final EditText userName = new EditText(mContext);
         userName.setInputType(InputType.TYPE_CLASS_TEXT);
         builder.setView(userName).setMessage("Enter Your Name")

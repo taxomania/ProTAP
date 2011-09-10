@@ -6,7 +6,7 @@ package games.pack.protap;
 import games.pack.protap.localscore.PostTopScore;
 import games.pack.protap.localscore.RetrieveTopScore;
 import games.pack.protap.localscore.TopScorePrefs;
-import games.pack.protap.upload.PostBoxingHighScore;
+import games.pack.protap.upload.PostHighScore;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -16,44 +16,35 @@ import android.os.Bundle;
  * @author Tariq
  *
  */
-public class BoxingActivity extends Boxing {
+public class BoxingActivity extends PracticeBoxingActivity {
     private static int sHighScore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        showStartDialog();
         new RetrieveBoxingTopScore(this).execute();
     } // onCreate(Bundle)
-
-    @Override
-    void showStartDialog() {
-        new AlertDialog.Builder(this)
-                .setMessage("Tap the ball as many times as you can in 10s. Press GO to start")
-                .setCancelable(false)
-                .setPositiveButton("GO", new DialogInterface.OnClickListener() {
-                    public void onClick(final DialogInterface dialog, final int id) {
-                        mTimer.start();
-                    } // onClick
-                }).create().show();
-    } // showStartDialog()
 
     @Override
     void end() {
         final int finalScore = Integer.parseInt(mCounterView.getText().toString());
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        if (finalScore > sHighScore) {
+            sHighScore = finalScore;
+            new PostBoxingTopScore(this).execute(sHighScore);
+            builder.setTitle("NEW HIGH SCORE!");
+        } // if
         builder.setMessage("Your score: " + finalScore).setCancelable(true)
                 .setPositiveButton("Continue", new DialogInterface.OnClickListener() {
                     public void onClick(final DialogInterface dialog, final int id) {
                         finish();
                     }
-                });
-        builder.create().show();
-        if (finalScore > sHighScore) {
-            sHighScore = finalScore;
-            new PostBoxingTopScore(BoxingActivity.this).execute(sHighScore);
-            new PostBoxingHighScore(BoxingActivity.this, finalScore).enterName();
-        }
+                }).setNeutralButton("Upload Score", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        new PostBoxingHighScore(BoxingActivity.this, finalScore).enterName();
+                    }
+                }).create().show();
     } // end
 
     private final class RetrieveBoxingTopScore extends RetrieveTopScore {
@@ -84,4 +75,12 @@ public class BoxingActivity extends Boxing {
             return edit.putBoxingScore(score).commit();
         } // postTask(TopScorePrefs.Editor, Integer)
     } // PostBoxingTopScore
+
+    private final class PostBoxingHighScore extends PostHighScore {
+        private static final String URL = "http://pro-tap.appspot.com/postboxing";
+
+        public PostBoxingHighScore(final Context context, final int score) {
+            super(context, score, URL);
+        } // PostBoxingHighScore(Context, int)
+    } // PostBoxingHighScore
 } // BoxingActivity
