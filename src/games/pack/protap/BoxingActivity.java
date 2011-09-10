@@ -26,6 +26,11 @@ public class BoxingActivity extends PracticeBoxingActivity {
     } // onCreate(Bundle)
 
     @Override
+    protected void onStart() {
+        super.onStart();
+    } // onStart()
+
+    @Override
     protected void end() {
         final int finalScore = Integer.parseInt(mCounterView.getText().toString());
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
