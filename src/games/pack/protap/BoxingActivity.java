@@ -26,30 +26,29 @@ public class BoxingActivity extends PracticeBoxingActivity {
     } // onCreate(Bundle)
 
     @Override
-    void end() {
+    public final void end() {
         final int finalScore = Integer.parseInt(mCounterView.getText().toString());
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        if (finalScore > sHighScore) {
-            sHighScore = finalScore;
-            new PostBoxingTopScore(this).execute(sHighScore);
-            builder.setTitle("NEW HIGH SCORE!");
-        } // if
-        builder.setMessage("Your score: " + finalScore).setCancelable(true)
-                .setPositiveButton("Continue", new DialogInterface.OnClickListener() {
-                    public void onClick(final DialogInterface dialog, final int id) {
-                        finish();
-                    }
-                });
-
-        if (sHighScore > 0) {
+        if (finalScore > 0) {
             builder.setNeutralButton("Upload Score", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(final DialogInterface dialog, final int which) {
                     new PostBoxingHighScore(BoxingActivity.this, finalScore).enterName();
                 } // onClick(DialogInterface, int)
             });
+            if (finalScore > sHighScore) {
+                sHighScore = finalScore;
+                new PostBoxingTopScore(this).execute(sHighScore);
+                builder.setTitle("NEW HIGH SCORE!");
+            } // if
         } // if
-        builder.create().show();
+
+        builder.setMessage("Your score: " + finalScore).setCancelable(true)
+                .setPositiveButton("Continue", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, final int id) {
+                        finish();
+                    }
+                }).create().show();
     } // end
 
     private final class RetrieveBoxingTopScore extends RetrieveTopScore {

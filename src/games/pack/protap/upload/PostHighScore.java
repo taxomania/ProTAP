@@ -1,5 +1,8 @@
 package games.pack.protap.upload;
 
+import games.pack.protap.BoxingActivity;
+import games.pack.protap.ReactionActivity;
+
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -51,6 +54,12 @@ public abstract class PostHighScore {
                 }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     public void onClick(final DialogInterface dialog, final int whichButton) {
                         dialog.dismiss();
+                        if (mContext instanceof ReactionActivity){
+                            ((ReactionActivity)mContext).end();
+                        }
+                        else if (mContext instanceof BoxingActivity){
+                            ((BoxingActivity)mContext).end();
+                        } // if
                     }
                 });
         final AlertDialog alert = builder.create();

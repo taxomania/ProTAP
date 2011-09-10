@@ -30,10 +30,18 @@ public class ReactionActivity extends PracticeReactionActivity {
     protected void showCompleteAlert() {
         final int score = score(mTime);
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        if (score > sHighScore) {
-            builder.setTitle("NEW HIGH SCORE");
-            sHighScore = score;
-            new PostReactionTopScore(this).execute(sHighScore);
+        if (score > 0) {
+            builder.setNeutralButton("Upload Score", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(final DialogInterface dialog, final int which) {
+                    new PostReactionHighScore(ReactionActivity.this, score).enterName();
+                } // onClick(DialogInterface, int)
+            });
+            if (score > sHighScore) {
+                sHighScore = score;
+                new PostReactionTopScore(this).execute(sHighScore);
+                builder.setTitle("NEW HIGH SCORE");
+            } // if
         } // if
         final Intent boxingIntent = new Intent(this, BoxingActivity.class);
         builder.setMessage("Your time: " + mTime + "ms\nYour score: " + score).setCancelable(false)
@@ -45,17 +53,12 @@ public class ReactionActivity extends PracticeReactionActivity {
                     public void onClick(final DialogInterface dialog, final int id) {
                         finish();
                     }
-                });
-        if (sHighScore > 0) {
-            builder.setNeutralButton("Upload Score", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(final DialogInterface dialog, final int which) {
-                    new PostReactionHighScore(ReactionActivity.this, score).enterName();
-                } // onClick(DialogInterface, int)
-            });
-        } // if
-        builder.create().show();
+                }).create().show();
     } // showCompleteAlert
+
+    public final void end(){
+        finish();
+    }
 
     private final class RetrieveReactionTopScore extends RetrieveTopScore {
         public RetrieveReactionTopScore(final Context context) {
