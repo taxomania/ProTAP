@@ -128,6 +128,37 @@ public class HighScoreActivity extends Activity {
                     ranks = doc.getElementsByTagName("rank");
                     names = doc.getElementsByTagName("name");
                     scores = doc.getElementsByTagName("score");
+
+                    for (int i = 0; i < ranks.getLength(); i++) {
+                        final TableRow tr = new TableRow(HighScoreActivity.this);
+                        mHighScoreTable.addView(tr);
+
+                        final TextView rankText = new TextView(HighScoreActivity.this);
+                        rankText.setText(ranks.item(i).getFirstChild().getNodeValue());
+                        rankText.setTextColor(Color.WHITE);
+                        final int px = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                                20, getResources().getDisplayMetrics());
+                        rankText.setPadding(0, 0, px, 0);
+                        rankText.setGravity(Gravity.CENTER);
+                        tr.addView(rankText);
+
+                        final TextView nameText = new TextView(HighScoreActivity.this);
+                        final Node n = names.item(i).getFirstChild();
+                        if (n == null) {
+                            nameText.setText("");
+                        } else {
+                            nameText.setText(n.getNodeValue());
+                        }
+                        nameText.setTextColor(Color.WHITE);
+                        tr.addView(nameText);
+
+                        final TextView scoreText = new TextView(HighScoreActivity.this);
+                        scoreText.setText(scores.item(i).getFirstChild().getNodeValue());
+                        scoreText.setTextColor(Color.WHITE);
+                        scoreText.setGravity(Gravity.CENTER);
+                        tr.addView(scoreText);
+
+                    } // for
                 } catch (ParserConfigurationException e) {
                     e.printStackTrace();
                 } catch (SAXException e) {
@@ -135,36 +166,6 @@ public class HighScoreActivity extends Activity {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
-                for (int i = 0; i < names.getLength(); i++) {
-                    final TableRow tr = new TableRow(HighScoreActivity.this);
-                    mHighScoreTable.addView(tr);
-
-                    final TextView rankText = new TextView(HighScoreActivity.this);
-                    rankText.setText(ranks.item(i).getFirstChild().getNodeValue());
-                    rankText.setTextColor(Color.WHITE);
-                    final int px = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20,
-                            getResources().getDisplayMetrics());
-                    rankText.setPadding(0, 0, px, 0);
-                    rankText.setGravity(Gravity.CENTER);
-                    tr.addView(rankText);
-
-                    final TextView nameText = new TextView(HighScoreActivity.this);
-                    final Node n = names.item(i).getFirstChild();
-                    if (n == null) {
-                        nameText.setText("");
-                    } else {
-                        nameText.setText(n.getNodeValue());
-                    }
-                    nameText.setTextColor(Color.WHITE);
-                    tr.addView(nameText);
-
-                    final TextView scoreText = new TextView(HighScoreActivity.this);
-                    scoreText.setText(scores.item(i).getFirstChild().getNodeValue());
-                    scoreText.setTextColor(Color.WHITE);
-                    scoreText.setGravity(Gravity.CENTER);
-                    tr.addView(scoreText);
-                } // for
                 this.dialog.dismiss();
             } // if response not null
         } // onPostExecute
